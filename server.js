@@ -55,7 +55,7 @@ app.get('/api/menu', async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error('Error fetching menu data:', error);
-        console.error(error.stack); // Log full stack trace
+        console.error(error.stack); 
         res.status(500).json({ error: `An error occurred while fetching menu data: ${error.message}` });
     }
 });
