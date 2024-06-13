@@ -1,3 +1,12 @@
+const express = require('express');
+const cors = require('cors');
+const fetch = require('cross-fetch');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(cors());
+
 // For Restaurant API
 app.get('/api/restaurants', async (req, res) => {
     const { lat, lng, page_type } = req.query;
@@ -58,4 +67,13 @@ app.get('/api/menu', async (req, res) => {
         console.error(error.stack); 
         res.status(500).json({ error: `An error occurred while fetching menu data: ${error.message}` });
     }
+});
+
+
+app.get('/', (req, res) => {
+    res.json({ "test": "Welcome to Foodwing! - See Live Web URL for this Server - https://food-wing.vercel.app/" });
+});
+
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
 });
