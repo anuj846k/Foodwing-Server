@@ -7,11 +7,17 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
+const logRequestDetails = (req, res, next) => {
+    console.log(`Received request for ${req.originalUrl}`);
+    console.log('Query parameters:', req.query);
+    next();
+};
+
+app.use(logRequestDetails);
+
 // For Restaurant API
 app.get('/api/restaurants', async (req, res) => {
     const { lat, lng, page_type } = req.query;
-    console.log(req.query);
-
     const url = `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${lat}&lng=${lng}&page_type=${page_type}`;
 
     try {
@@ -24,23 +30,22 @@ app.get('/api/restaurants', async (req, res) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+            const errorText = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Response: ${errorText}`);
         }
 
         const data = await response.json();
-        console.log(data);
+        console.log('Restaurant data:', data);
         res.json(data);
     } catch (error) {
         console.error('Error fetching restaurant data:', error);
-        res.status(500).send('An error occurred while fetching restaurant data');
+        res.status(500).send(`An error occurred while fetching restaurant data: ${error.message}`);
     }
 });
 
 // For Menu API
 app.get('/api/menu', async (req, res) => {
     const { 'page-type': page_type, 'complete-menu': complete_menu, lat, lng, restaurantId } = req.query;
-    console.log(req.query);
-
     const url = `https://www.swiggy.com/dapi/menu?page-type=${page_type}&complete-menu=${complete_menu}&lat=${lat}&lng=${lng}&restaurantId=${restaurantId}`;
 
     try {
@@ -53,15 +58,16 @@ app.get('/api/menu', async (req, res) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+            const errorText = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Response: ${errorText}`);
         }
 
         const data = await response.json();
-        console.log(data);
+        console.log('Menu data:', data);
         res.json(data);
     } catch (error) {
         console.error('Error fetching menu data:', error);
-        res.status(500).send('An error occurred while fetching menu data');
+        res.status(500).send(`An error occurred while fetching menu data: ${error.message}`);
     }
 });
 
