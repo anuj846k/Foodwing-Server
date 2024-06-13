@@ -1,12 +1,3 @@
-const express = require('express');
-const cors = require('cors');
-const fetch = require('cross-fetch');
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(cors());
-
 // For Restaurant API
 app.get('/api/restaurants', async (req, res) => {
     const { lat, lng, page_type } = req.query;
@@ -24,15 +15,17 @@ app.get('/api/restaurants', async (req, res) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+            const errorText = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Response: ${errorText}`);
         }
 
         const data = await response.json();
-        console.log(data);
+        console.log('Restaurant data:', data);
         res.json(data);
     } catch (error) {
         console.error('Error fetching restaurant data:', error);
-        res.status(500).send('An error occurred while fetching restaurant data');
+        console.error(error.stack); // Log full stack trace
+        res.status(500).json({ error: `An error occurred while fetching restaurant data: ${error.message}` });
     }
 });
 
@@ -53,22 +46,16 @@ app.get('/api/menu', async (req, res) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+            const errorText = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Response: ${errorText}`);
         }
 
         const data = await response.json();
-        console.log(data);
+        console.log('Menu data:', data);
         res.json(data);
     } catch (error) {
         console.error('Error fetching menu data:', error);
-        res.status(500).send('An error occurred while fetching menu data');
+        console.error(error.stack); // Log full stack trace
+        res.status(500).json({ error: `An error occurred while fetching menu data: ${error.message}` });
     }
-});
-
-app.get('/', (req, res) => {
-    res.json({ "test": "Welcome to Foodwing! - See Live Web URL for this Server - https://food-wing.vercel.app/" });
-});
-
-app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
 });
