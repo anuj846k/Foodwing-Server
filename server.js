@@ -24,7 +24,6 @@ app.get('/api/restaurants', async (req, res) => {
         const response = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
             }
         });
@@ -39,7 +38,7 @@ app.get('/api/restaurants', async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error('Error fetching restaurant data:', error);
-        res.status(500).send(`An error occurred while fetching restaurant data: ${error.message}`);
+        res.status(500).json({ error: `An error occurred while fetching restaurant data: ${error.message}` });
     }
 });
 
@@ -52,7 +51,6 @@ app.get('/api/menu', async (req, res) => {
         const response = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
             }
         });
@@ -67,14 +65,16 @@ app.get('/api/menu', async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error('Error fetching menu data:', error);
-        res.status(500).send(`An error occurred while fetching menu data: ${error.message}`);
+        res.status(500).json({ error: `An error occurred while fetching menu data: ${error.message}` });
     }
 });
 
+// Root route
 app.get('/', (req, res) => {
-    res.json({ "test": "Welcome to Foodwing! - See Live Web URL for this Server - https://foodwing.netlify.app/" });
-})
+    res.json({ message: 'Welcome to Foodwing! See Live Web URL for this Server: https://food-wing.vercel.app/' });
+});
 
+// Start the server
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });
