@@ -19,18 +19,19 @@ const fetchFromSwiggy = async (url) => {
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error(`Error fetching data from Swiggy URL: ${url}`);
+      console.error(`Response Status: ${response.status}, StatusText: ${response.statusText}`);
+      console.error(`Response Text: ${errorText}`);
       throw new Error(`Network response was not ok: ${response.statusText}, Response: ${errorText}`);
     }
 
     return await response.json();
   } catch (error) {
     console.error('Error fetching data from Swiggy:', error);
-    console.error(error.stack); // Log full stack trace
-    throw error; // Re-throw the error to be handled by the route
+    throw error;
   }
 };
 
-// For Restaurant API
 app.get('/api/restaurants', async (req, res) => {
   const { lat, lng, page_type } = req.query;
   console.log('Fetching restaurants with query:', req.query);
@@ -46,12 +47,11 @@ app.get('/api/restaurants', async (req, res) => {
   }
 });
 
-// For Menu API
 app.get('/api/menu', async (req, res) => {
   const { 'page-type': page_type, 'complete-menu': complete_menu, lat, lng, restaurantId } = req.query;
   console.log('Fetching menu with query:', req.query);
 
-  const url = `https://www.swiggy.com/dapi/menu?page-type=${page_type}&complete-menu=${complete_menu}&lat=${lat}&lng=${lng}&restaurantId=${restaurantId}`;
+  const url = `https://www.swiggy.com/dapi/menu/pl?page-type=${page_type}&complete-menu=${complete_menu}&lat=${lat}&lng=${lng}&restaurantId=${restaurantId}`;
 
   try {
     const data = await fetchFromSwiggy(url);
