@@ -51,7 +51,7 @@ app.get('/api/menu', async (req, res) => {
   const { 'page-type': page_type, 'complete-menu': complete_menu, lat, lng, restaurantId } = req.query;
   console.log('Fetching menu with query:', req.query);
 
-  const url = `https://www.swiggy.com/dapi/menu/pl?page-type=${page_type}&complete-menu=${complete_menu}&lat=${lat}&lng=${lng}&restaurantId=${restaurantId}`;
+  const url = `https://www.swiggy.com/dapi/menu/pl?page-type=${page_type}&complete-menu=${complete_menu}&lat=${lat}&lng=${lng}&submitAction=${submitAction}&restaurantId=${restaurantId}`;
 
   try {
     const data = await fetchFromSwiggy(url);
