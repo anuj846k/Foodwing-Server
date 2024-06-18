@@ -47,7 +47,7 @@ app.get('/api/restaurants', async (req, res) => {
   }
 });
 
-app.get('/dapi/menu', async (req, res) => {
+app.get('/api/menu', async (req, res) => {
   const { 'page-type': page_type, 'complete-menu': complete_menu, lat, lng, restaurantId } = req.query;
   console.log('Fetching menu with query:', req.query);
 
